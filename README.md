@@ -1,3 +1,19 @@
+```
+Jeason1997修改的内容：
+Makefile
+	1.增加交叉编译选项
+ch34x_mphsi_master_gpio.c
+	1.打开sysfs_gpio导出
+	2.TODO：打开导出sysfs_gpio后，在6.4以上的内核版本，ch34x_mphsi_gpio_probe函数里调用的gpio_export函数已经被废弃，改用gpiod_export，但两者由于参数不一样，所以我还没直接修改，待以后改
+ch34x_mphsi_master_i2c.c
+	1.注释掉retval = ch34x_i2c_check_dev(ch34x_dev, msgs[0].addr);修复在ch341上i2c只能读取无法写入的bug
+	2.修改i2c的默认速度为750k，retval = ch34x_mphsi_i2c_init(ch34x_dev, I2C_SPEED_750K);
+ch34x_mphsi_master_spi.c：
+	1.打开spidev导出
+	2.6.6以上版本SPI_MASTER_MUST_RX宏已经废弃，改用SPI_CONTROLLER_MUST_RX
+```
+
+
 # ch347/ch341 linux USB to SPI/I2C/GPIO Master Driver
 
 ##  概述
