@@ -17,6 +17,7 @@
 extern int ch34x_usb_transfer(struct ch34x_device *ch34x_dev, int out_len, int in_len);
 extern bool ch347_func_switch(struct ch34x_device *ch34x_dev, int index);
 
+static int ch34x_i2c_check_dev(struct ch34x_device *ch34x_dev, u8 addr) __attribute__((unused));
 static int ch34x_i2c_check_dev(struct ch34x_device *ch34x_dev, u8 addr)
 {
 	int retval;
@@ -311,7 +312,8 @@ static int ch34x_i2c_xfer(struct i2c_adapter *adapter, struct i2c_msg *msgs, int
 	mutex_lock(&ch34x_dev->io_mutex);
 
 	if (ch34x_dev->chiptype == CHIP_CH341) {
-		retval = ch34x_i2c_check_dev(ch34x_dev, msgs[0].addr);
+		// 注释掉这一行，否则ch341的i2c设备只能读取，无法写入
+		// retval = ch34x_i2c_check_dev(ch34x_dev, msgs[0].addr);
 		if (retval < 0)
 			goto exit;
 	}
@@ -472,7 +474,8 @@ int ch34x_mphsi_i2c_probe(struct ch34x_device *ch34x_dev)
 	}
 
 	/* set ch34x i2c speed */
-	retval = ch34x_mphsi_i2c_init(ch34x_dev, I2C_SPEED_100K);
+	// i2c速度设置为750k，ch341最高支持750k，ch347理论可以更高
+	retval = ch34x_mphsi_i2c_init(ch34x_dev, I2C_SPEED_750K);
 	if (retval < 0) {
 		dev_err(&ch34x_dev->adapter.dev, "init i2c speed failed\n");
 		goto error;

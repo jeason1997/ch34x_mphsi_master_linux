@@ -15,7 +15,8 @@
 #include "ch34x_mphsi.h"
 
 #define SPIDEV
-#undef SPIDEV
+// 注释掉下面这一行，打开spidev设备的自动绑定
+// #undef SPIDEV
 
 #define SPI_DMA_XFER 0
 
@@ -1101,6 +1102,9 @@ int ch34x_spi_probe(struct ch34x_device *ch34x_dev)
 	ch34x_dev->master->mode_bits = SPI_MODE_3 | SPI_LSB_FIRST | SPI_CS_HIGH;
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 15, 0)
 	ch34x_dev->master->flags = SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(6, 6, 0)
+	// 6.6以上去掉了SPI_MASTER_MUST_RX，实际上它就是SPI_CONTROLLER_MUST_RX
+	ch34x_dev->master->flags = SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX;
 #endif
 
 #if LINUX_VERSION_CODE > KERNEL_VERSION(5, 0, 0)

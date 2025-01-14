@@ -15,7 +15,8 @@
 #include "ch34x_mphsi.h"
 
 #define SYSFS_GPIO
-#undef SYSFS_GPIO
+// 注释掉下面这一行，打开gpio设备的自动绑定
+// #undef SYSFS_GPIO
 
 /* parameters */
 static int param_gpio_base = -1;
